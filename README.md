@@ -1,44 +1,57 @@
-INSTALLATION
+INSTALLATION 
 Ubuntu 12.04
 =======
 
-**Install Apache2**
+Install Apache2
+--------------
+
 	$ apt-get install apache2
 
 
-**Install mod-wsgi**
+Install mod-wsgi
+--------------
+
 	$ apt-get install libapache2-mod-wsgi 
 	$ a2enmod wsgi 
 
 
-**Install MySQL**
+Install MySQL
+--------------
+
 	$ apt-get install mysql-server libapache2-mod-auth-mysql
 	$ apt-get install libmysqlclient-dev
 	$ mysql_install_db
 	$ /usr/bin/mysql_secure_installation
 
 Create database:
+
 	$ mysql -u root -p
 	mysql> create database checkip;
 
 View data in database:
+
 	mysql> use checkip;
 	mysql> select * from log_table;
 
 
-**Install pip and virtualenv**
+Install pip and virtualenv
+--------------
+
 	$ apt-get install python-pip python-dev build-essential 
 	$ pip install --upgrade pip 
 	$ pip install --upgrade virtualenv
 
 Load project to /var/www/checkip/ directory or another, setup virtualenv and pip packages:
+
 	$ cd /var/www/checkip/
 	$ virtualenv venv
 	$ . venv/bin/activate
 	$ pip install -r requirements.txt
 
 
-**Make apache config**
+Make apache config
+--------------
+
 	$ nano /etc/apache2/sites-available/checkip.conf
 
 Input:
@@ -61,7 +74,9 @@ Input:
 					CustomLog ${APACHE_LOG_DIR}/access.log combined
 	</VirtualHost>
 
+
 Enable virtualhost:
+
 	$ a2ensite checkip
 
 
@@ -72,29 +87,31 @@ Enable virtualhost:
 	
 Input:
 
-import sys
-import os
-import logging
-logging.basicConfig(stream=sys.stderr)
+	import sys
+	import os
+	import logging
+	logging.basicConfig(stream=sys.stderr)
 
 
-activate_env=os.path.expanduser("/var/www/checkip/venv/bin/activate_this.py")
-execfile(activate_env, dict(__file__=activate_env))
+	activate_env=os.path.expanduser("/var/www/checkip/venv/bin/activate_this.py")
+	execfile(activate_env, dict(__file__=activate_env))
 
-sys.path.insert(0,"/var/www/checkip/")
+	sys.path.insert(0,"/var/www/checkip/")
 
-from application.core import app as application
-application.secret_key = 'Qdas34!@3FEwf3.#4Rqfew'  # Change to your random secret key
+	from application.core import app as application
+	application.secret_key = 'Qdas34!@3FEwf3.#4Rqfew'  # Change to your random secret key
 
-if __name__ == '__main__':
-    application.run()
+	if __name__ == '__main__':
+		application.run()
 
 
 Restart apache:
+
 	$ service apache2 restart
 	
 
-**Run tests**
+Run tests
+--------------
 
 	$ python tests.py
 
