@@ -1,6 +1,7 @@
-INSTALLATION 
-Ubuntu 12.04
+CHECKIP
 =======
+
+Installation on Ubuntu 12.04
 
 Install Apache2
 --------------
